@@ -6,7 +6,7 @@ jobs={}
 users={}
 apps={}
 user_history={}
-users2={}
+users2=[]
 
 jobs_file=path+'/jobs.tsv'
 users_file=path+'/users.tsv'
@@ -53,9 +53,6 @@ with open(users_file,'rw') as user:
             
 with open(user2_file,'rw') as user2:
     for row in user2.readlines():
-        row= row.split('\t')
-        try:
-            row[0]=int(row[0])
-            users2[int(row[0])]=row
-        except ValueError:
-            x=1
+        users2.append(int(row))
+            
+    
