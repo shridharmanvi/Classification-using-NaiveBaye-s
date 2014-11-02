@@ -112,6 +112,36 @@ for u,j in apps.keys():
         job_usr[j].extend(k)
     except KeyError:
         job_usr[j]=k
-        
-        
+
+final_probabilities={}
+
+
+#the below is main loop that calculates probabilities of each word and adds up the sum and stores it in final_prob dict
+for u in users2:
+    for j in j2:
+        users_applied=job_usr[j]
+        c=0
+        s=0
+        co=0
+        d=0
+        ci={}
+        st={}
+        cou={}
+        dt={}
+        for x in users_applied:
+            city=users[u][1]
+            state=users[u][2]
+            country=users[u][3]
+            degree=users[u][5]
+            if(main[x,j][0]==city):c+=1
+            else: ci[main[x,j][0]]=0
+            if(main[x,j][1]==state):s+=1
+            else: st[main[x,j][1]]=0
+            if(main[x,j][1]==country):co+=1
+            else: st[main[x,j][2]]=0
+            if(main[x,j][1]==degree):d+=1
+            else: st[main[x,j][3]]=0
+        su= ((c/len(ci.keys()))+(s/len(st.keys()))+(co/len(cou.keys()))+(d/len(dt.keys())))
+        final_probabilities[u,j]=su
+
 
