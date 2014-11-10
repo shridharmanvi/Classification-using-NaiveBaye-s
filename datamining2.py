@@ -2,6 +2,7 @@
 # python datamining2.py /Users/shridharmanvi/desktop/Projects/Datamining-2
 
 import sys
+import operator
 
 path=sys.argv[1] #input path from the terminal/command prompt
 
@@ -80,7 +81,11 @@ for key in jobs.keys():
     if(date >'2012-04-09 00:00:00'):
         j2.append(int(key))
 
+for j in jobs.keys():
+    if(j==180243):
+        print jobs[j]
 
+"""
 main={}# the dataset which consists of attributes being considered for probability calculation (ranking documents)
 
 #the main dictionary is populated in the below loop
@@ -115,10 +120,16 @@ for u,j in apps.keys():
 
 final_probabilities={}
 
+jfin=[]
+
+check= job_usr.keys()
+
+l3= list(set(check)&set(j2))#Taking off the jobs to which the users have not applied at all since the probability of
+#users in U2 applying to these jobs will be zero
 
 #the below is main loop that calculates probabilities of each word and adds up the sum and stores it in final_prob dict
 for u in users2:
-    for j in j2:
+    for j in l3:
         users_applied=job_usr[j]
         c=0
         s=0
@@ -134,14 +145,25 @@ for u in users2:
             country=users[u][3]
             degree=users[u][5]
             if(main[x,j][0]==city):c+=1
-            else: ci[main[x,j][0]]=0
+            else: ci[main[x,j][0]]=1
             if(main[x,j][1]==state):s+=1
-            else: st[main[x,j][1]]=0
+            else: st[main[x,j][1]]=1
             if(main[x,j][1]==country):co+=1
-            else: st[main[x,j][2]]=0
+            else: st[main[x,j][2]]=1
             if(main[x,j][1]==degree):d+=1
-            else: st[main[x,j][3]]=0
-        su= ((c/len(ci.keys()))+(s/len(st.keys()))+(co/len(cou.keys()))+(d/len(dt.keys())))
+            else: st[main[x,j][3]]=1
+        if(len(ci.keys())==0):one=1
+        else:one= len(ci.keys())
+        if(len(st.keys())==0):two=1
+        else:two= len(st.keys())
+        if(len(cou.keys())==0):thr=1
+        else:thr= len(cou.keys())
+        if(len(dt.keys())==0):four=1
+        else:four= len(dt.keys())
+        su= ((c/one)+(s/two)+(co/thr)+(d/four))
         final_probabilities[u,j]=su
 
+x=sorted(final_probabilities.iteritems(), key=operator.itemgetter(1), reverse=True)[:150]
 
+print x
+"""
