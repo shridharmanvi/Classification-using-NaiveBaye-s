@@ -81,11 +81,6 @@ for key in jobs.keys():
     if(date >'2012-04-09 00:00:00'):
         j2.append(int(key))
 
-for j in jobs.keys():
-    if(j==180243):
-        print jobs[j]
-
-"""
 main={}# the dataset which consists of attributes being considered for probability calculation (ranking documents)
 
 #the main dictionary is populated in the below loop
@@ -166,4 +161,3 @@ for u in users2:
 x=sorted(final_probabilities.iteritems(), key=operator.itemgetter(1), reverse=True)[:150]
 
 print x
-"""
