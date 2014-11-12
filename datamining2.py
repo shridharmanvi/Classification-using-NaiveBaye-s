@@ -122,6 +122,10 @@ check= job_usr.keys()
 l3= list(set(check)&set(j2))#Taking off the jobs to which the users have not applied at all since the probability of
 #users in U2 applying to these jobs will be zero
 
+
+final = [(-1, -1, -1) for t in range(150)]
+
+
 #the below is main loop that calculates probabilities of each word and adds up the sum and stores it in final_prob dict
 for u in users2:
     for j in l3:
@@ -156,8 +160,19 @@ for u in users2:
         if(len(dt.keys())==0):four=1
         else:four= len(dt.keys())
         su= ((c/one)+(s/two)+(co/thr)+(d/four))
-        final_probabilities[u,j]=su
+        min_su = min(final)
+        if su > min_su[0]:
+            min_index = final.index(min_su)
+            final[min_index] = (su, u, j)
+        #final = sorted(final, key=lambda y: y[2], reverse=True)[:150]
+        #final_probabilities[u,j]=su
 
-x=sorted(final_probabilities.iteritems(), key=operator.itemgetter(1), reverse=True)[:150]
 
-print x
+
+#print 'Probabilities calculation complete!! Finding top 150 values'
+
+
+#x=sorted(final_probabilities.items(), key=operator.itemgetter(1), reverse=True)[:150]
+
+
+print sorted(final, reverse=True)[:150]
