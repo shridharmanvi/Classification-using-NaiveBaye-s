@@ -161,11 +161,10 @@ for u in users2:
         else:four= len(dt.keys())
         su= ((c/one)+(s/two)+(co/thr)+(d/four))
         min_su = min(final)
-        if su > min_su[0]:
+        if su > min_su[0]:#check if the min value in final is greater than this value.If yes then replace
             min_index = final.index(min_su)
             final[min_index] = (su, u, j)
-        #final = sorted(final, key=lambda y: y[2], reverse=True)[:150]
-        #final_probabilities[u,j]=su
+        #final will always have top 150 at any given time 
 
 
 
