@@ -1,10 +1,11 @@
 # to run this file execute the following command:
-# python datamining2.py /Users/shridharmanvi/desktop/Projects/Datamining-2
+# python datamining2.py /Users/shridharmanvi/desktop/Projects/Datamining-2 /Users/shridharmanvi/desktop/Projects/Datamining-2/Classification-using-NaiveBaye-s/output.tsv 
 
 import sys
 import operator
 
 path=sys.argv[1] #input path from the terminal/command prompt
+outputfile=sys.argv[2]
 
 jobs={}
 users={}
@@ -187,7 +188,7 @@ print sorted(final, reverse=True)[:150]
 
 
 #The below section writes the output to output.csv
-j = open('output.tsv','w')
+j = open(outputfile,'w')
 
 for c in final:
     v= str(c[1]) +'\t'+ str(c[2])+'\n'
