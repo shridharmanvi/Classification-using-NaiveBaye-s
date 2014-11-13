@@ -120,6 +120,7 @@ jfin=[]
 check= job_usr.keys()
 
 l3= list(set(check)&set(j2))#Taking off the jobs to which the users have not applied at all since the probability of
+
 #users in U2 applying to these jobs will be zero
 
 
@@ -134,23 +135,35 @@ for u in users2:
         s=0
         co=0
         d=0
+        e=0
         ci={}
         st={}
         cou={}
         dt={}
+        ex={}
         for x in users_applied:
             city=users[u][1]
             state=users[u][2]
             country=users[u][3]
             degree=users[u][5]
+            exp=users[u][9]
+            if(exp<=5): experience= 'One'
+            elif(exp>5 <=10):experience= 'Two'
+            elif(exp >10 <=15):experience='Three'
+            elif(exp >15 <=20):experience='Four'
+            elif(exp >20 <=25):experience='Five'
+            elif(exp >25 <=30):experience='Six'
+            else:experience='Seven'
             if(main[x,j][0]==city):c+=1
             else: ci[main[x,j][0]]=1
             if(main[x,j][1]==state):s+=1
             else: st[main[x,j][1]]=1
-            if(main[x,j][1]==country):co+=1
-            else: st[main[x,j][2]]=1
-            if(main[x,j][1]==degree):d+=1
-            else: st[main[x,j][3]]=1
+            if(main[x,j][2]==country):co+=1
+            else: cou[main[x,j][2]]=1
+            if(main[x,j][3]==degree):d+=1
+            else: dt[main[x,j][4]]=1
+            if(main[x,j][6]==experience):e+=1
+            else: ex[main[x,j][6]]=1   
         if(len(ci.keys())==0):one=1
         else:one= len(ci.keys())
         if(len(st.keys())==0):two=1
@@ -159,7 +172,9 @@ for u in users2:
         else:thr= len(cou.keys())
         if(len(dt.keys())==0):four=1
         else:four= len(dt.keys())
-        su= ((c/one)+(s/two)+(co/thr)+(d/four))
+        if(len(ex.keys())==0):five=1
+        else:five= len(ex.keys())
+        su= ((c/one)+(s/two)+(co/thr)+(d/four)+(e/five))
         min_su = min(final)
         if su > min_su[0]:#check if the min value in final is greater than this value.If yes then replace
             min_index = final.index(min_su)
@@ -167,11 +182,15 @@ for u in users2:
         #final will always have top 150 at any given time 
 
 
-
-#print 'Probabilities calculation complete!! Finding top 150 values'
-
-
-#x=sorted(final_probabilities.items(), key=operator.itemgetter(1), reverse=True)[:150]
-
-
+#The below code sorts the final results in descending order
 print sorted(final, reverse=True)[:150]
+
+
+#The below section writes the output to output.csv
+j = open('output.tsv','w')
+
+for c in final:
+    v= str(c[1]) +'\t'+ str(c[2])+'\n'
+    j.write(v)
+
+print 'output.tsv created with top 150 most probable users who might apply to respective jobs!'
