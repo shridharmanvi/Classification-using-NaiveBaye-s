@@ -50,11 +50,14 @@ for row in uhis.readlines():
     row= row.split('\t')
     try:
         row[0]=int(row[0])
-        user_history[int(row[0])]=row
+        row[1]=int(row[1])
+        user_history[int(row[0]),int(row[1])]=row
     except ValueError:
         x=1
      
-            
+#print user_history
+
+
 user=open(users_file,'rw')
 
 for row in user.readlines():
@@ -71,16 +74,30 @@ for row in user2.readlines():
     users2.append(int(row))
             
 
-print 'Step1:Reading files and storing in inbuilt datastructures complete! .Starting step 2....'
+print 'Step1:Data import step complete!'
+print 'Starting probability calculation. Please note, it might take around 80 mins to produce the final result'
 
 #Buiding J2 (All the jobs whose end date is after 29-04-09)
 #j2 will have the jobIds of all the jobs whose end date is greater than '2012-04-09 00:00:00'
-
 
 for key in jobs.keys():
     date=jobs[key][9] 
     if(date >'2012-04-09 00:00:00'):
         j2.append(int(key))
+
+
+#Building Titles every user previously had in his career
+
+user_titles={}
+
+for useri,seq in user_history.keys():
+    try:
+        user_titles[useri].append(user_history[useri,seq][2].rstrip('\r\n'))
+    except KeyError:
+        user_titles[useri]=[user_history[useri,seq][2].rstrip('\r\n')]
+        
+#print user_titles
+
 
 main={}# the dataset which consists of attributes being considered for probability calculation (ranking documents)
 
@@ -114,14 +131,14 @@ for u,j in apps.keys():
     except KeyError:
         job_usr[j]=k
 
+
 final_probabilities={}
 
-jfin=[]
+#jfin=[]
 
-check= job_usr.keys()
+check= job_usr.keys()#collecting all jobs for use in next step below
 
 l3= list(set(check)&set(j2))#Taking off the jobs to which the users have not applied at all since the probability of
-
 #users in U2 applying to these jobs will be zero
 
 
@@ -137,6 +154,7 @@ for u in users2:
         co=0
         d=0
         e=0
+        title=0
         ci={}
         st={}
         cou={}
@@ -164,7 +182,20 @@ for u in users2:
             if(main[x,j][3]==degree):d+=1
             else: dt[main[x,j][4]]=1
             if(main[x,j][6]==experience):e+=1
-            else: ex[main[x,j][6]]=1   
+            else: ex[main[x,j][6]]=1
+            try:
+                user_job=user_titles[u]
+            except KeyError:
+                user_job=[]
+            try:
+                user_job_comp=user_titles[x]
+            except KeyError:
+                user_job_comp=[]
+            for a in user_job:#this part compares the users job history with the current user
+                try:
+                    if(a in user_job_comp):title+=1#if user has worked under a title which the....
+                except KeyError:#.....training user has also worked, count is incremented
+                    x=0
         if(len(ci.keys())==0):one=1
         else:one= len(ci.keys())
         if(len(st.keys())==0):two=1
@@ -175,7 +206,7 @@ for u in users2:
         else:four= len(dt.keys())
         if(len(ex.keys())==0):five=1
         else:five= len(ex.keys())
-        su= ((c/one)+(s/two)+(co/thr)+(d/four)+(e/five))
+        su= ((c/one)+(s/two)+(co/thr)+(d/four)+(e/five)+title)#Calculates the score for every user,job combination
         min_su = min(final)
         if su > min_su[0]:#check if the min value in final is greater than this value.If yes then replace
             min_index = final.index(min_su)
@@ -184,13 +215,13 @@ for u in users2:
 
 
 #The below code sorts the final results in descending order
-print sorted(final, reverse=True)[:150]
+final_print = sorted(final, reverse=True)[:150]
 
 
 #The below section writes the output to output.csv
 j = open(outputfile,'w')
 
-for c in final:
+for c in final_print:
     v= str(c[1]) +'\t'+ str(c[2])+'\n'
     j.write(v)
 
